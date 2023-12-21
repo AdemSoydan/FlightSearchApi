@@ -9,10 +9,10 @@ public class Flight {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-    @OneToOne()
+    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "depature_airport")
     Airport departureAirport;
-    @OneToOne()
+    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "arrival_airport")
     Airport arrivalAirport;
     LocalDateTime departureTime;
