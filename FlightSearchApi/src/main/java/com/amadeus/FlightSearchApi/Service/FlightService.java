@@ -9,17 +9,24 @@ import com.amadeus.FlightSearchApi.Repository.FlightRepository;
 import com.amadeus.FlightSearchApi.Request.FlightRequest;
 import com.amadeus.FlightSearchApi.Response.AirportResponse;
 import com.amadeus.FlightSearchApi.Response.FlightResponse;
+import com.amadeus.FlightSearchApi.Response.SearchFlightResponse;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class FlightService {
+    @Autowired
     private FlightRepository flightRepository;
+    @Autowired
     private AirportRepository airportRepository;
 
     public FlightResponse createFlight(FlightRequest request){
@@ -84,4 +91,30 @@ public class FlightService {
         return new FlightResponse(dbFlight.get());
     }
 
+    public SearchFlightResponse searchFlights(String departureCity, String arrivalCity,
+                                              LocalDate departureDate, Optional<LocalDate> returnDate) {
+        departureCity = departureCity.toUpperCase();
+        arrivalCity = arrivalCity.toUpperCase();
+        SearchFlightResponse response = new SearchFlightResponse();
+
+        List<Flight> departureFlights = getFlights(departureDate,departureCity,arrivalCity);
+        response.setDepartureFlights(departureFlights.stream().map(FlightResponse::new).collect(Collectors.toList()));
+
+        if (returnDate.isPresent()) {
+            List<Flight> returnFlights = getFlights(returnDate.get(),arrivalCity,departureCity);
+            response.setReturnFlights(returnFlights.stream().map(FlightResponse::new).collect(Collectors.toList()));
+        }
+        return response;
+    }
+
+    private List<Flight> getFlights(LocalDate date, String departureCity, String arrivalCity){
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+        List<Flight> flights = flightRepository.findByDepartureAirportAndArrivalAirportAndDepartureTime(
+                departureCity, arrivalCity, startOfDay, endOfDay);
+
+        return flights;
+    }
+
 }
+

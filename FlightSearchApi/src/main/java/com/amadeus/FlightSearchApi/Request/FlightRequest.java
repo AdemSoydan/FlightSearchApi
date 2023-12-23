@@ -2,6 +2,7 @@ package com.amadeus.FlightSearchApi.Request;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 @Data
 public class FlightRequest {

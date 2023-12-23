@@ -25,7 +25,7 @@ public class AirportService {
         return new AirportResponse(dbAirport.get());
     }
     public AirportResponse saveAirport(AirportRequest airportRequest){
-        Airport savedAirport =  airportRepository.save(new Airport(airportRequest.getCity()));
+        Airport savedAirport =  airportRepository.save(new Airport(airportRequest.getCity().toUpperCase()));
         return new AirportResponse(savedAirport);
     }
 
@@ -47,8 +47,9 @@ public class AirportService {
         if(dbAirport.isEmpty())
             throw new AirportNotFoundException("The Airport that is want to be updated is not found");
 
+
         Airport airport = dbAirport.get();
-        airport.setCity(request.getCity());
+        airport.setCity(request.getCity().toUpperCase());
 
         return new AirportResponse(airport);
     }
