@@ -3,25 +3,30 @@ package com.amadeus.FlightSearchApi.Entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class Airport {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @NonNull
     private String city;
 
-    public Airport(String city) {
-        this.city = city;
-    }
+    @OneToMany(mappedBy = "departureAirport", cascade = CascadeType.REMOVE)
+    private List<Flight> departingFlights;
+
+    @OneToMany(mappedBy = "arrivalAirport", cascade = CascadeType.REMOVE)
+    private List<Flight> arrivingFlights;
+
+    public Airport(){}
 }

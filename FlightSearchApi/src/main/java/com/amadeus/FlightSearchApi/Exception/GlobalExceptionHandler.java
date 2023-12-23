@@ -19,7 +19,15 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleAirportNotFoundException(AirportNotFoundException exception) {
         Map<String, String> map =  new HashMap<>();
-        map.put("Data Error :", exception.getMessage());
+        map.put("AirportError", exception.getMessage());
+        return map;
+    }
+
+    @ExceptionHandler(FlightNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleFlightNotFoundException(FlightNotFoundException exception) {
+        Map<String, String> map =  new HashMap<>();
+        map.put("FlightError", exception.getMessage());
         return map;
     }
 }

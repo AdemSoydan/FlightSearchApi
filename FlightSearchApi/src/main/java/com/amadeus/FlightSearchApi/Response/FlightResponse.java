@@ -12,16 +12,16 @@ import java.time.LocalDateTime;
 @Data
 public class FlightResponse {
     int id;
-    private Airport departureAirport;
-    private Airport arrivalAirport;
+    private AirportResponse departureAirport;
+    private AirportResponse arrivalAirport;
     LocalDateTime departureTime;
     LocalDateTime arrivalTime;
     double price;
 
     public FlightResponse(Flight flight) {
         this.id = flight.getId();
-        this.departureAirport = flight.getDepartureAirport();
-        this.arrivalAirport = flight.getArrivalAirport();
+        this.departureAirport = new AirportResponse(flight.getDepartureAirport());
+        this.arrivalAirport = new AirportResponse(flight.getArrivalAirport());
         this.departureTime = flight.getDepartureTime();
         this.arrivalTime = flight.getArrivalTime();
         this.price = flight.getPrice();
