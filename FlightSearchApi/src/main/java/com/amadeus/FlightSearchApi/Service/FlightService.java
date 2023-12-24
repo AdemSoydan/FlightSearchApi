@@ -35,7 +35,7 @@ public class FlightService {
     private AirportRepository airportRepository;
 
     @Transactional
-    @Scheduled(fixedRate = 5000) // Her gün 00:00'da çalışacak
+    @Scheduled(cron = "0 0 0 * * ?")
     public void fetchFlightInfoAndSave() {
        List<FlightRequest> flightRequests = MockAPI.generateMockFlightInfoList(5);
        flightRequests.stream().forEach(this::createFlight);

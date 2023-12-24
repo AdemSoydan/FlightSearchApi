@@ -17,14 +17,14 @@ public class JwtUtil {
     public String generateToken(Authentication auth) {
         UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
         Date expireDate = new Date(new Date().getTime() + expiration);
-        return Jwts.builder().setSubject((userDetails.getId().toString()))
+        return Jwts.builder().setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date()).setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
 
-    public int extractId(String token) {
-        return Integer.parseInt(extractClaims(token).getSubject());
+    public String extractUsername(String token) {
+        return extractClaims(token).getSubject();
     }
 
     public boolean validateToken(String token) {

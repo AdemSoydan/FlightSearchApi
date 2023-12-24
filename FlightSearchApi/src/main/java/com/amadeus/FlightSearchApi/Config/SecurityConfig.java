@@ -25,8 +25,25 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private static final String[] WHITE_LIST_URL = {"/auth/**",
-            "/auth/register/**", "/auth/login/**"};
+    private static final String[] WHITE_LIST_URL = {
+            // -- Swagger UI v2
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            // -- Swagger UI v3 (OpenAPI)
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/auth/register/**",
+            "/auth/login/**",
+            "/h2/**",
+            "/swagger-ui.html",
+            "/Flight/search"
+            // other public endpoints of your API may be appended to this array
+    };
     private final AuthenticationFilter jwtAuthFilter;
 
     private final UserDetailServiceImpl userService;
@@ -53,21 +70,19 @@ public class SecurityConfig {
                 .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(handler).and()
                 .authorizeHttpRequests(x ->
-                        x.requestMatchers("/auth/welcome/**").permitAll()
-                                .requestMatchers("/auth/register/**").permitAll()
-                                .requestMatchers("/auth/login/**").permitAll()
-                                .requestMatchers("/h2/**").permitAll()
+                        x.requestMatchers(WHITE_LIST_URL).permitAll()
                 )
 
                 .authorizeHttpRequests(x ->
-                        x.requestMatchers("/airport").authenticated()
-                                .requestMatchers("/Flight").authenticated()
+                        x.requestMatchers("/airport/**").authenticated()
+                                .requestMatchers("/Flight/**").authenticated()
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

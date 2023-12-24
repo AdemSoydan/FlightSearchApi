@@ -32,8 +32,8 @@ public class AirportController {
     }
 
     @GetMapping("/{airportId}")
-    public AirportResponse getAirportById(@PathVariable int flightId) {
-        return airportService.getAirportById(flightId);
+    public AirportResponse getAirportById(@PathVariable int airportId) {
+        return airportService.getAirportById(airportId);
     }
 
     @PutMapping("/{airportId}")
