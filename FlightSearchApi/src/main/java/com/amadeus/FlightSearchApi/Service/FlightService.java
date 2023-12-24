@@ -10,9 +10,12 @@ import com.amadeus.FlightSearchApi.Request.FlightRequest;
 import com.amadeus.FlightSearchApi.Response.AirportResponse;
 import com.amadeus.FlightSearchApi.Response.FlightResponse;
 import com.amadeus.FlightSearchApi.Response.SearchFlightResponse;
+import com.amadeus.FlightSearchApi.Util.MockAPI;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,12 +25,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.amadeus.FlightSearchApi.Util.MockAPI.generateMockFlightInfoList;
+
 @Service
 public class FlightService {
     @Autowired
     private FlightRepository flightRepository;
     @Autowired
     private AirportRepository airportRepository;
+
+    @Transactional
+    @Scheduled(fixedRate = 5000) // Her gün 00:00'da çalışacak
+    public void fetchFlightInfoAndSave() {
+       List<FlightRequest> flightRequests = MockAPI.generateMockFlightInfoList(5);
+       flightRequests.stream().forEach(this::createFlight);
+    }
+
+
+
+
 
     public FlightResponse createFlight(FlightRequest request){
        Optional<Airport> departureAirport =  airportRepository.findById(request.getDepartureAirportId());

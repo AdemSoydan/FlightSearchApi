@@ -47,6 +47,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        http.headers().frameOptions().disable();
         return http
                 .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(handler).and()
@@ -54,6 +56,7 @@ public class SecurityConfig {
                         x.requestMatchers("/auth/welcome/**").permitAll()
                                 .requestMatchers("/auth/register/**").permitAll()
                                 .requestMatchers("/auth/login/**").permitAll()
+                                .requestMatchers("/h2/**").permitAll()
                 )
 
                 .authorizeHttpRequests(x ->

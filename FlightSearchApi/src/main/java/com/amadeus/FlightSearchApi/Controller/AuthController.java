@@ -43,7 +43,7 @@ public class AuthController {
         String jwtToken = jwtTokenProvider.generateToken(auth);
         User user = userService.getUserByUserName(loginRequest.getUserName()).get();
         AuthResponse authResponse = new AuthResponse();
-        authResponse.setAccessToken("Bearer " + jwtToken);
+        authResponse.setAccessToken(jwtToken);
         authResponse.setUserId(user.getId());
         authResponse.setMessage("User successfully login.");
         return authResponse;
@@ -68,7 +68,7 @@ public class AuthController {
         String jwtToken = jwtTokenProvider.generateToken(auth);
 
         authResponse.setMessage("User successfully registered.");
-        authResponse.setAccessToken("Bearer " + jwtToken);
+        authResponse.setAccessToken(jwtToken);
         authResponse.setUserId(user.getId());
         return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
     }
